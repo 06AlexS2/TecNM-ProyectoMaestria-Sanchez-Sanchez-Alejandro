@@ -1,0 +1,275 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Oct 26 17:18:26 2022
+
+@author: alexs2
+"""
+
+from scipy import stats
+import numpy as np
+import math
+import seaborn as sns
+import pandas as pd
+import matplotlib.pyplot as plt
+import statistics
+from scipy.stats import norm
+from scipy.stats import mannwhitneyu
+from scipy.stats import normaltest
+from statsmodels.graphics.gofplots import qqplot
+from scipy.stats import shapiro
+
+
+
+#generar valores
+# vg_first_test = [38,37,42,53,44,44,55,37,44,39,46,47,45,46,42,40]
+# arr_firstvg = np.asarray(vg_first_test)
+
+# vg_second_test = [45,40,42,46,48,44,51,37,44,52,44,50,42,48,53,41]
+# arr_secondvg = np.asarray(vg_second_test)
+
+#videojuego
+df = pd.read_csv('/Users/alexs2/Desktop/videogame_tests.csv')
+df_vg = df
+df_vg.insert(0,"group", 'videogame')
+##datos de antes
+min_value_before = df_vg['before'].min()
+print("videojuego (antes):")
+print("valor minimo: ",min_value_before)
+max_value_before= df_vg['before'].max()
+print("valor maximo:",max_value_before)
+
+mean_value_before = df_vg['before'].mean()
+print("media: ", mean_value_before)
+median_value_before = df_vg['before'].median()
+print("mediana",median_value_before)
+mode_value_before = df_vg['before'].mode()
+print("moda:",mode_value_before)
+print("\n")
+
+#datos de despues
+min_value_after = df_vg['after'].min()
+print("videojuego (despues):")
+print("valor minimo: ",min_value_after)
+max_value_after = df_vg['after'].max()
+print("valor maximo:",max_value_after)
+
+mean_value_after = df_vg['after'].mean()
+print("media: ", mean_value_after)
+median_value_after = df_vg['after'].median()
+print("mediana",median_value_after)
+mode_value_after = df_vg['after'].mode()
+print("moda:",mode_value_after)
+print("\n")
+#boxplot
+#sns.boxplot(x=df3['group'], y=df3['before'])
+
+
+##music control
+df2 = pd.read_csv('/Users/alexs2/Desktop/music_tests.csv')
+df_music = df2
+df_music.insert(0,'group', 'music')
+
+df3 = pd.concat([df_vg, df_music])
+#sns.boxplot(x=df3['group'], y=df3['after'])
+
+
+
+##datos de antes
+print('control: \n')
+m_min_value_before = df_music['before'].min()
+print("control (antes):")
+print("valor minimo: ",m_min_value_before)
+m_max_value_before= df_music['before'].max()
+print("valor maximo:", m_max_value_before)
+
+m_mean_value_before = df_music['before'].mean()
+print("media: ", m_mean_value_before)
+m_median_value_before = df_music['before'].median()
+print("mediana",m_median_value_before)
+m_mode_value_before = df_music['before'].mode()
+print("moda:",m_mode_value_before)
+print("\n")
+
+#datos de despues
+m_min_value_after = df_music['after'].min()
+print("control (despues):")
+print("valor minimo: ",m_min_value_after)
+m_max_value_after = df_music['after'].max()
+print("valor maximo:",m_max_value_after)
+
+m_mean_value_after = df_music['after'].mean()
+print("media: ", m_mean_value_after)
+m_median_value_after = df_music['after'].median()
+print("mediana",m_median_value_after)
+m_mode_value_after = df_music['after'].mode()
+print("moda:",m_mode_value_after)
+print("\n")
+#boxplot
+#sns.boxplot(x=df3['group'], y=df3['before'])
+#sns.boxplot(x=df3['group'], y=df3['after'])
+
+#desviacion estandar y varianza
+print("\n")
+print('desviacion estandar')
+print(df3[['before', 'after']].std())
+print('varianza:')
+print(df3[['before', 'after']].var())
+
+##poner medianas al before y after del dataframe de control
+new_row1 = {'group':'music', 'Alumno' : 'empty1', 'before' : 39, 'after' : 41, 'result' : 'SUBIO'}
+df_music = df_music.append(new_row1, ignore_index=True)
+new_row2 = {'group':'music', 'Alumno' : 'empty2', 'before' : 39, 'after' : 41, 'result' : 'SUBIO'}
+df_music = df_music.append(new_row2, ignore_index=True)
+
+##T-TEST STUDENT FOR MUSIC METHOD
+
+t_value, p_value = stats.ttest_rel(df_music['before'], df_music['after'])
+
+alpha = 0.1
+
+print('Test statistic is %f'%float("{:.6f}".format(t_value)))
+
+print('p-value for two tailed test is %f'%p_value)
+
+if p_value<=alpha:
+
+    print('Conclusion','n','Since p-value(=%f)'%p_value,'<','alpha(=%.2f)'%alpha,'''We reject the null hypothesis H0. .'''%alpha)
+
+else:
+
+    print('Conclusion','n','Since p-value(=%f)'%p_value,'>','alpha(=%.2f)'%alpha,'''We do not reject the null hypothesis H0.
+          So we conclude that the students have not benefited by music method. i.e., d = 0 at %.2f level of significance.'''%alpha)
+
+##T-TEST STUDENT FOR VIDEO GAME METHOD
+t_value2, p_value2 = stats.ttest_rel(df_vg['before'], df_vg['after'])
+print('Test statistic is %f'%float("{:.6f}".format(t_value2)))
+
+print('p-value for two tailed test is %f'%p_value2)
+
+if p_value<=alpha:
+
+    print('Conclusion','n','Since p-value(=%f)'%p_value2,'<','alpha(=%.2f)'%alpha,'''We reject the null hypothesis H0. 
+          So we conclude that the students have benefited by video game method.'''%alpha)
+
+else:
+
+    print('Conclusion','n','Since p-value(=%f)'%p_value2,'>','alpha(=%.2f)'%alpha,'''We do not reject the null hypothesis H0.
+          So we conclude that the students have not benefited by video game method. i.e., d = 0 at %.2f level of significance.'''%alpha)
+
+##MANN-WHITNEY  U TEST
+
+vg_difference = df_vg['after'] - df_vg['before']
+ms_difference = df_music['after'] - df_music['before']
+
+u1, p = mannwhitneyu(vg_difference, ms_difference)
+
+nx, ny = len(vg_difference), len(ms_difference)
+u2 = nx*ny - u1
+print(u2)
+
+U = min(u1, u2)
+N = nx + ny
+z = (U - nx*ny/2 + 0.5) / np.sqrt(nx*ny * (N + 1)/ 12)
+print("z value:", z)
+
+## verificacion
+
+vg_verif = [-100, -100, -200, -90, -200, -100, -100, -150]
+music_verif = [20, 4, 1, 31, 20, 10, 21, 2]
+
+uv1, pv = mannwhitneyu(vg_verif, music_verif)
+
+nnx, nny = len(vg_verif), len(music_verif)
+uv2 = nnx*nny - uv1
+print(uv2)
+print(uv2)
+
+UV = min(uv1, uv2)
+NV = nnx +nny
+zv = (UV - nnx*nny/2 + 0.5) / np.sqrt(nnx*nny * (NV + 1) / 12)
+print("testing z value:", zv)
+
+"""
+WILCOXON - MANN-WHITNEY MANUAL
+"""
+
+# #ordenar valores de cada df
+
+vg_difference = vg_difference.to_frame(name='values')
+ms_difference = ms_difference.to_frame(name='values')
+
+vg_difference.insert(0, 'group', 'videogame')
+ms_difference.insert(0, 'group', 'music')
+
+# vg_difference = vg_difference.sort_values(by=[1], ascending=True)
+
+
+# ms_difference = ms_difference.sort_values(by=['0'], ascending=True)
+
+all_diff = vg_difference.append(ms_difference, ignore_index=True)
+all_sorted = all_diff.sort_values(by=['values'], ignore_index=True)
+
+#darles un ranking a los valores
+all_sorted.insert(loc=2, column="rank", value=all_sorted['values'].rank())
+all_sorted = all_sorted.sort_values(by = ['group', 'values'])
+
+#ordenar de nuevo por grupo
+#vid = 253
+#mus = 275
+#de entrada la hipotesis de u0 se rechaza
+#ranksum = 528
+n1 = n2 = 16
+w1 = 254.5
+w2 = (((n1+n2)*(n1+n2+1))/2) - w1 #273.5
+#dado que w = 75 para una muestra de n1 = n2 = 16, y w1 & w2 >> w
+#no se rechaza la hipótesis nula h0
+
+#comprobación con valor z
+uw1 = (n1)*((n1+n2+1)/2)
+sw1 = math.sqrt((n1*n2)*(n1+n2)/12)
+ssw1 = sw1*sw1
+z0 = (w1-uw1)/sw1 #-0.363596...
+#dado que z0 es mayor que -1.96 pero menor que 1.96, se vuelve a comprobar la hipótesis h0
+#por la permanencia de las desviaciones estandar relacionadas con el valor z
+#obtenido
+
+"""
+VERIFICAR DISTRIBUCION NORMAL Y REALIZAR T TEST
+"""
+# Represento el Q-Q plot
+qqplot(ms_difference['values'] , line='s')
+plt.title('Q-Q Plot from after-before (music)')
+plt.show()
+
+#represento el test de shapiro
+ndtest = shapiro(ms_difference['values'])
+print(ndtest)
+#dado que el test de shapiro como el qqplot dan resultados aparentemente similares
+#no rechazamos que los datos se encuentren distribuidos normalmente
+
+##t de student para las diferencias exclusivamente
+
+td, pd = stats.ttest_rel(vg_difference['values'], ms_difference['values'])
+print('Test statistic is %f'%float("{:.6f}".format(td))) # valor t: 0.186124
+
+print('p-value for two tailed test is %f'%pd) #valor p = 0.854841
+
+print("and for one-tailed is: %f"%(pd/2)) #valor p/2 = 0.427421
+
+#determinar el valor t critico estadistico con base en pruebas de doble cola
+alfa = 0.05
+#grados de libertad
+freedom = 15 #dado que n1 = n2 = 16, la formula de df es n-1, o si no, n=31
+#valor t critico
+t_critic = stats.t.ppf(1-alfa/2, df=freedom)
+print(t_critic)# valor t critico = 2.1314 o si n=31 -> t_critic es 2.03951344
+
+#entonces, dada la premisa h0 : ud = 0 esta dada por t < t_critic
+#no se descarta hipotesis t0, por lo que parece indicar que la significancia 
+#estadistica es la misma y, por transitividad, el videojuego funciona tan bien como la musica
+
+"""
+MANN- WHITNEY U Test
+"""
+
