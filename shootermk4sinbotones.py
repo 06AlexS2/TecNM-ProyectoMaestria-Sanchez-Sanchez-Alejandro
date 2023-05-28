@@ -1040,7 +1040,7 @@ while run:
                         world_data[x][y] = int(tile)
             world = World()
             player, health_bar = world.process_data(world_data)
-
+#COMENTAR LINEA 1044-1057 PARA JUGAR SIN EL CONTROL DE VIDEOJUEGO
       #aqui va el read data del serial
     data = ser.readline().decode('utf-8')
     # print(data)
