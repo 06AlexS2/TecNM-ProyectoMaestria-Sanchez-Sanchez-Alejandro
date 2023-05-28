@@ -29,7 +29,7 @@ from datetime import timedelta
 from timeit import default_timer as timer
 import serial
 from pynput.keyboard import Controller
-
+#COMENTAR DE LA LINEA 34 A LA LINEA 52 PARA USAR EL VIDEOJUEGO SIN TEMER EL CONTROL CONECTADO
 #INICIAR LA COMUNICACION SERIAL EN EL PUERTO DONDE SE UBIQUE EL ARDUINO NANO
 ser = serial.Serial("/dev/cu.usbserial-1110")
 ##SE REINICIA ESA CONEXION AL MOMENTO DE HACERSE, CON EL OBJETIVO DE AJUSTAR LA ESTABILIDAD Y EVITAR FALLOS
