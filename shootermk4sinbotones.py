@@ -1063,7 +1063,7 @@ while run:
         if event.type == pygame.QUIT:
             run = False
             
-        # #keyboard presses
+        # REMOVER COMENTARIOS DE LA LINEA 1067 A LA LINEA 1094 PARA USO SIN CONTROL DE VIDEOJUEGOS
         # if event.type == pygame.KEYDOWN:
         #     if event.key == pygame.K_a:
         #         moving_left = True
